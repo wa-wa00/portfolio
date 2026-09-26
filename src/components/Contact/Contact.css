@@ -1,0 +1,141 @@
+.contact-section { position: relative; }
+
+.contact-bg-orb {
+  position: absolute;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(124,58,237,.1) 0%, transparent 70%);
+  bottom: 10%; left: -200px;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.contact-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+/* Info */
+.contact-desc {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin-bottom: 40px;
+  max-width: 480px;
+}
+
+.contact-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.c-method {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.cm-icon {
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--purple-light);
+  flex-shrink: 0;
+}
+
+.cm-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-faint);
+  margin-bottom: 4px;
+}
+
+.cm-val {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+}
+
+a.cm-val:hover {
+  color: var(--purple-light);
+}
+
+/* Form */
+.contact-form {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cf-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.cf-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cf-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.cf-group input,
+.cf-group textarea {
+  width: 100%;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.cf-group input::placeholder,
+.cf-group textarea::placeholder {
+  color: var(--text-faint);
+}
+
+.cf-group input:focus,
+.cf-group textarea:focus {
+  outline: none;
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+}
+
+.cf-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.cf-submit {
+  margin-top: 10px;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .contact-wrapper {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+  
+  .contact-form {
+    padding: 30px 24px;
+  }
+}
