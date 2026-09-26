@@ -1,0 +1,115 @@
+.skills-section { position: relative; }
+
+.skills-bg-orb {
+  position: absolute;
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, rgba(124,58,237,.1) 0%, transparent 70%);
+  top: 20%; left: -150px;
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+/* Category pills */
+.cat-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.cat-pill {
+  padding: 7px 18px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cat-pill:hover { border-color: var(--purple); color: var(--purple-light); }
+
+.cat-pill.active {
+  background: linear-gradient(135deg, var(--purple), var(--blue));
+  border-color: transparent;
+  color: #fff;
+}
+
+/* Grid */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+}
+
+/* Skill card */
+.sk-card {
+  position: relative;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  overflow: hidden;
+}
+
+.sk-card::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(124,58,237,.06), rgba(59,130,246,.06));
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity .3s;
+}
+
+.sk-card:hover::after { opacity: 1; }
+
+.sk-icon { font-size: 26px; flex-shrink: 0; }
+
+.sk-info { flex: 1; min-width: 0; }
+
+.sk-name {
+  font-size: 13px; font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.sk-bar {
+  height: 4px;
+  background: rgba(255,255,255,.07);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.sk-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--purple), var(--blue), var(--cyan));
+  border-radius: 2px;
+  transition: width 1.1s cubic-bezier(.4,0,.2,1);
+}
+
+.sk-pct {
+  font-size: 11px;
+  color: var(--text-faint);
+  float: right;
+}
+
+.sk-badge {
+  position: absolute;
+  top: 10px; right: 12px;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--purple-light);
+  background: rgba(124,58,237,.12);
+  padding: 3px 8px;
+  border-radius: 100px;
+}
+
+@media (max-width: 560px) {
+  .skills-grid { grid-template-columns: 1fr; }
+}
