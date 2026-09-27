@@ -18,16 +18,15 @@
 /* ── Card ── */
 .proj-card {
   position: relative;
-  padding: 28px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
   /* override glass-card transition for tilt */
   transition: box-shadow .3s ease, border-color .3s ease, background .3s ease !important;
   transform-style: preserve-3d;
   will-change: transform;
   overflow: hidden;
   cursor: default;
+  padding: 0; /* Removing padding from card itself to let image flush */
 }
 
 /* Glow blob */
@@ -47,8 +46,59 @@
 .glow-b { background: radial-gradient(circle, var(--blue), var(--cyan)); }
 .glow-c { background: radial-gradient(circle, var(--cyan), var(--purple)); }
 
+/* --- Image Section --- */
+.proj-image-container {
+  width: 100%;
+  height: 160px;
+  position: relative;
+  overflow: hidden;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.proj-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.proj-card:hover .proj-image {
+  transform: scale(1.05);
+}
+
+.proj-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, var(--bg-card) 90%, var(--bg-card));
+  opacity: 0.8;
+}
+
+.proj-icon-overlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Content */
-.proj-icon { font-size: 36px; position: relative; z-index: 1; }
+.proj-content-wrapper {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.proj-icon { font-size: 36px; position: relative; z-index: 1; } /* Fallback icon */
 
 .proj-title {
   font-family: 'Space Grotesk', sans-serif;
@@ -66,6 +116,7 @@
 .proj-tags {
   display: flex; flex-wrap: wrap; gap: 6px;
   position: relative; z-index: 1;
+  margin-top: auto;
 }
 
 .proj-tag {
@@ -80,6 +131,7 @@
 .proj-links {
   display: flex; gap: 10px;
   position: relative; z-index: 1;
+  margin-top: 8px;
 }
 
 .plink {

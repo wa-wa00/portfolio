@@ -4,36 +4,42 @@ import './Projects.css'
 
 const PROJECTS = [
   {
+    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800',
     icon: '🔗', title: 'API Gateway Service',
     desc: 'High-performance API gateway with rate limiting, JWT auth, and request routing built with FastAPI and Redis.',
     tags: ['Python', 'FastAPI', 'Redis', 'Docker'],
     github: 'https://github.com/wa-wa00', live: '#', glow: 'glow-p',
   },
   {
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
     icon: '✅', title: 'Task Management System',
     desc: 'Full-stack task manager with real-time updates via WebSocket, built with Node.js, Express, and PostgreSQL.',
     tags: ['Node.js', 'Express', 'PostgreSQL', 'WebSocket'],
     github: 'https://github.com/wa-wa00', live: '#', glow: 'glow-b',
   },
   {
+    image: 'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?auto=format&fit=crop&q=80&w=800',
     icon: '☸️', title: 'K8s Microservices',
     desc: 'Kubernetes-based microservices deployment with Helm charts, HPA auto-scaling, and Prometheus monitoring.',
     tags: ['Kubernetes', 'Docker', 'Helm', 'Prometheus'],
     github: 'https://github.com/wa-wa00', live: '#', glow: 'glow-c',
   },
   {
+    image: 'https://images.unsplash.com/photo-1616469829581-73993eb86b02?auto=format&fit=crop&q=80&w=800',
     icon: '💰', title: 'Finance Mobile App',
     desc: 'Cross-platform personal finance tracker built with Flutter, featuring real-time sync and offline-first support.',
     tags: ['Flutter', 'Firebase', 'Dart'],
     github: 'https://github.com/wa-wa00', live: '#', glow: 'glow-p',
   },
   {
+    image: 'https://images.unsplash.com/photo-1555949963-aa79dcee57d5?auto=format&fit=crop&q=80&w=800',
     icon: '🔒', title: 'Auth Microservice',
     desc: 'Secure authentication service with JWT, OAuth2, 2FA, and RBAC permission management.',
     tags: ['Python', 'FastAPI', 'PostgreSQL', 'JWT'],
     github: 'https://github.com/wa-wa00', live: '#', glow: 'glow-b',
   },
   {
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
     icon: '📊', title: 'ETL Data Pipeline',
     desc: 'Async ETL pipeline for processing large datasets with Celery workers, monitoring, and failure recovery.',
     tags: ['Python', 'Celery', 'MongoDB', 'RabbitMQ'],
@@ -79,15 +85,29 @@ const ProjectCard = ({ p, delay }) => {
       onMouseLeave={onLeave}
     >
       <div className={`proj-glow ${p.glow}`} />
-      <div className="proj-icon">{p.icon}</div>
-      <h3 className="proj-title">{p.title}</h3>
-      <p className="proj-desc">{p.desc}</p>
-      <div className="proj-tags">
-        {p.tags.map((t) => <span key={t} className="proj-tag">{t}</span>)}
-      </div>
-      <div className="proj-links">
-        <a href={p.github} target="_blank" rel="noopener" className="plink"><GH /> GitHub</a>
-        <a href={p.live}   target="_blank" rel="noopener" className="plink primary"><ExtLink /> Live</a>
+      
+      {/* --- Image Section --- */}
+      {p.image && (
+        <div className="proj-image-container">
+          <img src={p.image} alt={p.title} className="proj-image" />
+          <div className="proj-image-overlay"></div>
+          <div className="proj-icon-overlay">{p.icon}</div>
+        </div>
+      )}
+
+      <div className="proj-content-wrapper">
+        {/* Fallback icon if no image */}
+        {!p.image && <div className="proj-icon">{p.icon}</div>}
+        
+        <h3 className="proj-title">{p.title}</h3>
+        <p className="proj-desc">{p.desc}</p>
+        <div className="proj-tags">
+          {p.tags.map((t) => <span key={t} className="proj-tag">{t}</span>)}
+        </div>
+        <div className="proj-links">
+          <a href={p.github} target="_blank" rel="noopener noreferrer" className="plink"><GH /> GitHub</a>
+          <a href={p.live}   target="_blank" rel="noopener noreferrer" className="plink primary"><ExtLink /> Live</a>
+        </div>
       </div>
     </div>
   )
