@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import './Navbar.css'
 
 const links = [
@@ -12,6 +13,8 @@ const links = [
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50)
@@ -20,15 +23,31 @@ const Navbar = () => {
   }, [])
 
   const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
     setOpen(false)
+    if (location.pathname !== '/') {
+      // Navigate to home first, then scroll
+      navigate('/')
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  const handleLogoClick = () => {
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      navigate('/')
+    }
   }
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-inner container">
         {/* Logo */}
-        <button className="nav-logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <button className="nav-logo" onClick={handleLogoClick}>
           <span className="bracket">&lt;</span>Walid<span className="bracket"> /&gt;</span>
         </button>
 

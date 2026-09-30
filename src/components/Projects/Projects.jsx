@@ -1,51 +1,8 @@
 import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { PROJECTS } from '../../data/projects'
 import useInView from '../../hooks/useInView'
 import './Projects.css'
-
-const PROJECTS = [
-  {
-    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800',
-    icon: '🔗', title: 'API Gateway Service',
-    desc: 'High-performance API gateway with rate limiting, JWT auth, and request routing built with FastAPI and Redis.',
-    tags: ['Python', 'FastAPI', 'Redis', 'Docker'],
-    github: 'https://github.com/wa-wa00', live: '#', glow: 'glow-p',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
-    icon: '✅', title: 'Task Management System',
-    desc: 'Full-stack task manager with real-time updates via WebSocket, built with Node.js, Express, and PostgreSQL.',
-    tags: ['Node.js', 'Express', 'PostgreSQL', 'WebSocket'],
-    github: 'https://github.com/wa-wa00', live: '#', glow: 'glow-b',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?auto=format&fit=crop&q=80&w=800',
-    icon: '☸️', title: 'K8s Microservices',
-    desc: 'Kubernetes-based microservices deployment with Helm charts, HPA auto-scaling, and Prometheus monitoring.',
-    tags: ['Kubernetes', 'Docker', 'Helm', 'Prometheus'],
-    github: 'https://github.com/wa-wa00', live: '#', glow: 'glow-c',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1616469829581-73993eb86b02?auto=format&fit=crop&q=80&w=800',
-    icon: '💰', title: 'Finance Mobile App',
-    desc: 'Cross-platform personal finance tracker built with Flutter, featuring real-time sync and offline-first support.',
-    tags: ['Flutter', 'Firebase', 'Dart'],
-    github: 'https://github.com/wa-wa00', live: '#', glow: 'glow-p',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1555949963-aa79dcee57d5?auto=format&fit=crop&q=80&w=800',
-    icon: '🔒', title: 'Auth Microservice',
-    desc: 'Secure authentication service with JWT, OAuth2, 2FA, and RBAC permission management.',
-    tags: ['Python', 'FastAPI', 'PostgreSQL', 'JWT'],
-    github: 'https://github.com/wa-wa00', live: '#', glow: 'glow-b',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
-    icon: '📊', title: 'ETL Data Pipeline',
-    desc: 'Async ETL pipeline for processing large datasets with Celery workers, monitoring, and failure recovery.',
-    tags: ['Python', 'Celery', 'MongoDB', 'RabbitMQ'],
-    github: 'https://github.com/wa-wa00', live: '#', glow: 'glow-c',
-  },
-]
 
 const GH = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15">
@@ -62,6 +19,7 @@ const ExtLink = () => (
 
 const ProjectCard = ({ p, delay }) => {
   const [ref, inView] = useInView()
+  const navigate = useNavigate()
 
   const onMove = (e) => {
     const card = ref.current
@@ -76,13 +34,20 @@ const ProjectCard = ({ p, delay }) => {
     if (ref.current) ref.current.style.transform = 'perspective(900px) rotateX(0) rotateY(0) scale(1)'
   }
 
+  const handleCardClick = (e) => {
+    // Prevent navigating to detail page if user clicked on GitHub or Live links directly
+    if (e.target.closest('.plink')) return
+    navigate(`/project/${p.id}`)
+  }
+
   return (
     <div
       ref={ref}
       className={`proj-card glass-card fade-in ${inView ? 'visible' : ''}`}
-      style={{ transitionDelay: `${delay}ms` }}
+      style={{ transitionDelay: `${delay}ms`, cursor: 'pointer' }}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
+      onClick={handleCardClick}
     >
       <div className={`proj-glow ${p.glow}`} />
       
@@ -127,7 +92,7 @@ const Projects = () => {
         </div>
 
         <div className="proj-grid">
-          {PROJECTS.map((p, i) => <ProjectCard key={p.title} p={p} delay={i * 75} />)}
+          {PROJECTS.map((p, i) => <ProjectCard key={p.id} p={p} delay={i * 75} />)}
         </div>
       </div>
     </section>

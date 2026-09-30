@@ -36,10 +36,10 @@ const Hero = () => {
       <div className="orb orb-3" />
 
       {/* Floating tech cards */}
-      <div className="fcard fcard-1 glass-card"><span>🐍</span><small>FastAPI</small></div>
+      {/* <div className="fcard fcard-1 glass-card"><span>🐍</span><small>FastAPI</small></div>
       <div className="fcard fcard-2 glass-card"><span>🐳</span><small>Docker</small></div>
       <div className="fcard fcard-3 glass-card"><span>☸️</span><small>K8s</small></div>
-      <div className="fcard fcard-4 glass-card"><span>⚡</span><small>Node.js</small></div>
+      <div className="fcard fcard-4 glass-card"><span>⚡</span><small>Node.js</small></div> */}
 
       <div className="hero-content container">
         <div className="hero-badge">
