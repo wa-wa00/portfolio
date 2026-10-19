@@ -13,4 +13,4 @@ export const SKILLS = [
   { name: 'Git / GitHub',        icon: '🔀', level: 92, cat: 'Tools',    order: 12 },
 ]
 
-export const CATS = ['All', 'Backend', 'DevOps', 'Database', 'Frontend', 'Mobile', 'Tools']
+export const CATS = ['All', 'Backend', 'DevOps', 'Database', 'Frontend', 'Mobile', 'Tools', 'Hardware']
