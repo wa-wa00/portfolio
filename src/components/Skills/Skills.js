@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { SKILLS as DEFAULT_SKILLS, CATS } from '../../data/skills'
+import { SKILLS as DEFAULT_SKILLS, CATS as DEFAULT_CATS } from '../../data/skills'
 import useInView from '../../hooks/useInView'
 import './Skills.css'
 
@@ -30,7 +30,7 @@ const Skills = () => {
   const [titleRef, titleInView] = useInView()
 
   useEffect(() => {
-    // Fetch dynamically from MongoDB API
+    // ดึงข้อมูลสดจาก MongoDB Database
     fetch('/api/skills')
       .then(res => res.json())
       .then(data => {
@@ -39,9 +39,13 @@ const Skills = () => {
         }
       })
       .catch(err => {
-        console.log('Using local fallback for skills:', err)
+        console.error('Skills fetch error:', err)
       })
   }, [])
+
+  // สกัดรายชื่อหมวดหมู่จากข้อมูลใน Database โดยอัตโนมัติ
+  const dbCategories = ['All', ...new Set(skills.map(s => s.cat).filter(Boolean))]
+  const categories = dbCategories.length > 1 ? dbCategories : DEFAULT_CATS
 
   const filtered = cat === 'All' ? skills : skills.filter((s) => s.cat === cat)
 
@@ -60,7 +64,7 @@ const Skills = () => {
         </div>
 
         <div className="cat-pills">
-          {CATS.map((c) => (
+          {categories.map((c) => (
             <button key={c} className={`cat-pill ${cat === c ? 'active' : ''}`} onClick={() => setCat(c)}>
               {c}
             </button>
@@ -68,7 +72,7 @@ const Skills = () => {
         </div>
 
         <div className="skills-grid">
-          {filtered.map((s, i) => <SkillCard key={s.name || i} skill={s} delay={i * 55} />)}
+          {filtered.map((s, i) => <SkillCard key={s._id || s.name || i} skill={s} delay={i * 55} />)}
         </div>
       </div>
     </section>
