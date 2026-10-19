@@ -11,6 +11,8 @@ export const SKILLS = [
   { name: 'Flutter',             icon: '💙', level: 70, cat: 'Mobile',   order: 10 },
   { name: 'Linux / Shell',       icon: '🐧', level: 82, cat: 'Tools',    order: 11 },
   { name: 'Git / GitHub',        icon: '🔀', level: 92, cat: 'Tools',    order: 12 },
+  { name: 'IoT / ESP32 & Arduino', icon: '🤖', level: 75, cat: 'Hardware', order: 13 },
+  { name: 'Raspberry Pi / Embedded', icon: '🍓', level: 70, cat: 'Hardware', order: 14 },
 ]
 
 export const CATS = ['All', 'Backend', 'DevOps', 'Database', 'Frontend', 'Mobile', 'Tools', 'Hardware']
