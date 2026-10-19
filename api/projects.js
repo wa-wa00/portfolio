@@ -1,11 +1,9 @@
 import mongoose from 'mongoose'
-import dns from 'dns'
 
-dns.setServers(['8.8.8.8', '8.8.4.4'])
+// ใช้ Direct URI เชื่อมต่อไปยัง Shards โดยตรง 100% ไม่ต้องพึ่งพา DNS SRV lookup
+const DIRECT_MONGODB_URI = 'mongodb://Admin:walid7879@ac-p2cbioi-shard-00-00.7ykl3j8.mongodb.net:27017,ac-p2cbioi-shard-00-01.7ykl3j8.mongodb.net:27017,ac-p2cbioi-shard-00-02.7ykl3j8.mongodb.net:27017/portfolio?ssl=true&replicaSet=atlas-71y4ds-shard-0&authSource=admin&retryWrites=true&w=majority'
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://Admin:walid7879@portfoliodb.7ykl3j8.mongodb.net/portfolio?retryWrites=true&w=majority&authSource=admin'
-
-let isConnected = false
+let cachedConn = null
 
 const projectSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
@@ -25,15 +23,14 @@ const projectSchema = new mongoose.Schema({
 const Project = mongoose.models.Project || mongoose.model('Project', projectSchema)
 
 async function connectDB() {
-  if (isConnected) return true
-  try {
-    await mongoose.connect(MONGODB_URI)
-    isConnected = true
-    return true
-  } catch (err) {
-    console.error('MongoDB connection error:', err)
-    return false
+  if (cachedConn && mongoose.connection.readyState === 1) {
+    return cachedConn
   }
+
+  cachedConn = await mongoose.connect(DIRECT_MONGODB_URI, {
+    serverSelectionTimeoutMS: 8000,
+  })
+  return cachedConn
 }
 
 export default async function handler(req, res) {
@@ -46,23 +43,19 @@ export default async function handler(req, res) {
   }
 
   const { id } = req.query
-  const connected = await connectDB()
 
-  if (connected) {
-    try {
-      if (id) {
-        const item = await Project.findOne({ id })
-        if (item) return res.status(200).json(item)
-        return res.status(404).json({ error: 'Project not found' })
-      } else {
-        const list = await Project.find().sort({ createdAt: -1 })
-        return res.status(200).json(list)
-      }
-    } catch (e) {
-      console.error('DB fetch failed:', e.message)
-      return res.status(500).json({ error: e.message })
+  try {
+    await connectDB()
+    if (id) {
+      const item = await Project.findOne({ id })
+      if (item) return res.status(200).json(item)
+      return res.status(404).json({ error: 'Project not found' })
+    } else {
+      const list = await Project.find().sort({ createdAt: -1 })
+      return res.status(200).json(list)
     }
+  } catch (e) {
+    console.error('DB fetch failed:', e.message)
+    return res.status(500).json({ error: e.message })
   }
-
-  return res.status(500).json({ error: 'Cannot connect to MongoDB database' })
 }
