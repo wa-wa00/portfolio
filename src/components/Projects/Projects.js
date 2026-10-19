@@ -1,6 +1,6 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { PROJECTS } from '../../data/projects'
+import { PROJECTS as DEFAULT_PROJECTS } from '../../data/projects'
 import useInView from '../../hooks/useInView'
 import './Projects.css'
 
@@ -80,6 +80,21 @@ const ProjectCard = ({ p, delay }) => {
 
 const Projects = () => {
   const [titleRef, titleInView] = useInView()
+  const [projects, setProjects] = useState(DEFAULT_PROJECTS)
+
+  useEffect(() => {
+    // Fetch dynamically from MongoDB / API
+    fetch('/api/projects')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProjects(data)
+        }
+      })
+      .catch(err => {
+        console.log('MongoDB API unreachable, using default projects:', err)
+      })
+  }, [])
 
   return (
     <section id="projects" className="section projects-section">
@@ -92,7 +107,7 @@ const Projects = () => {
         </div>
 
         <div className="proj-grid">
-          {PROJECTS.map((p, i) => <ProjectCard key={p.id} p={p} delay={i * 75} />)}
+          {projects.map((p, i) => <ProjectCard key={p.id || i} p={p} delay={i * 75} />)}
         </div>
       </div>
     </section>

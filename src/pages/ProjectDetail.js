@@ -5,13 +5,25 @@ import { useEffect, useState } from 'react'
 
 const ProjectDetail = () => {
   const { id } = useParams()
-  const project = PROJECTS.find(p => p.id === id)
+  const [project, setProject] = useState(() => PROJECTS.find(p => p.id === id))
   const [mounted, setMounted] = useState(false)
 
   // Scroll to top and trigger animation
   useEffect(() => {
     window.scrollTo(0, 0)
     setMounted(true)
+
+    // Fetch dynamically from MongoDB API
+    fetch(`/api/projects?id=${id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.title) {
+          setProject(data)
+        }
+      })
+      .catch(err => {
+        console.log('Using local fallback for project detail:', err)
+      })
   }, [id])
 
   if (!project) {
