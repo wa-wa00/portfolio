@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
 import dns from 'dns'
-import { PROJECTS as DEFAULT_PROJECTS } from '../src/data/projects.js'
 
 dns.setServers(['8.8.8.8', '8.8.4.4'])
+
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://Admin:walid7879@portfoliodb.7ykl3j8.mongodb.net/portfolio?retryWrites=true&w=majority&authSource=admin'
 
 let isConnected = false
 
@@ -24,11 +25,10 @@ const projectSchema = new mongoose.Schema({
 const Project = mongoose.models.Project || mongoose.model('Project', projectSchema)
 
 async function connectDB() {
-  if (isConnected || !process.env.MONGODB_URI) return isConnected
+  if (isConnected) return true
   try {
-    await mongoose.connect(process.env.MONGODB_URI)
+    await mongoose.connect(MONGODB_URI)
     isConnected = true
-    console.log('MongoDB Connected in Vercel Serverless')
     return true
   } catch (err) {
     console.error('MongoDB connection error:', err)
@@ -37,7 +37,6 @@ async function connectDB() {
 }
 
 export default async function handler(req, res) {
-  // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
@@ -47,33 +46,23 @@ export default async function handler(req, res) {
   }
 
   const { id } = req.query
-
   const connected = await connectDB()
 
   if (connected) {
     try {
-      // Auto-seed if database is empty
-      const count = await Project.countDocuments()
-      if (count === 0) {
-        await Project.insertMany(DEFAULT_PROJECTS)
-      }
-
       if (id) {
         const item = await Project.findOne({ id })
         if (item) return res.status(200).json(item)
+        return res.status(404).json({ error: 'Project not found' })
       } else {
         const list = await Project.find().sort({ createdAt: -1 })
-        if (list && list.length > 0) return res.status(200).json(list)
+        return res.status(200).json(list)
       }
     } catch (e) {
-      console.error('DB fetch failed, falling back:', e.message)
+      console.error('DB fetch failed:', e.message)
+      return res.status(500).json({ error: e.message })
     }
   }
 
-  // Fallback to local data
-  if (id) {
-    const fallback = DEFAULT_PROJECTS.find(p => p.id === id)
-    return res.status(200).json(fallback || null)
-  }
-  return res.status(200).json(DEFAULT_PROJECTS)
+  return res.status(500).json({ error: 'Cannot connect to MongoDB database' })
 }

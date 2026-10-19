@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
 import dns from 'dns'
-import { SKILLS as DEFAULT_SKILLS } from '../src/data/skills.js'
 
 dns.setServers(['8.8.8.8', '8.8.4.4'])
+
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://Admin:walid7879@portfoliodb.7ykl3j8.mongodb.net/portfolio?retryWrites=true&w=majority&authSource=admin'
 
 let isConnected = false
 
@@ -18,9 +19,9 @@ const skillSchema = new mongoose.Schema({
 const Skill = mongoose.models.Skill || mongoose.model('Skill', skillSchema)
 
 async function connectDB() {
-  if (isConnected || !process.env.MONGODB_URI) return isConnected
+  if (isConnected) return true
   try {
-    await mongoose.connect(process.env.MONGODB_URI)
+    await mongoose.connect(MONGODB_URI)
     isConnected = true
     return true
   } catch (err) {
@@ -42,21 +43,13 @@ export default async function handler(req, res) {
 
   if (connected) {
     try {
-      // Auto-seed if empty
-      const count = await Skill.countDocuments()
-      if (count === 0) {
-        await Skill.insertMany(DEFAULT_SKILLS)
-      }
-
       const skills = await Skill.find().sort({ order: 1, createdAt: 1 })
-      if (skills && skills.length > 0) {
-        return res.status(200).json(skills)
-      }
+      return res.status(200).json(skills)
     } catch (err) {
-      console.error('Skills DB fetch error, falling back:', err.message)
+      console.error('Skills DB fetch error:', err.message)
+      return res.status(500).json({ error: err.message })
     }
   }
 
-  // Fallback to local data
-  return res.status(200).json(DEFAULT_SKILLS)
+  return res.status(500).json({ error: 'Cannot connect to MongoDB database' })
 }
