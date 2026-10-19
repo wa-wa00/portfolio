@@ -1,23 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { SKILLS as DEFAULT_SKILLS, CATS } from '../../data/skills'
 import useInView from '../../hooks/useInView'
 import './Skills.css'
-
-const SKILLS = [
-  { name: 'Python / FastAPI',    icon: '🐍', level: 90, cat: 'Backend'  },
-  { name: 'Node.js / Express',   icon: '⚡', level: 85, cat: 'Backend'  },
-  { name: 'REST & GraphQL',      icon: '🔗', level: 90, cat: 'Backend'  },
-  { name: 'Docker',              icon: '🐳', level: 88, cat: 'DevOps'   },
-  { name: 'Kubernetes',          icon: '☸️', level: 75, cat: 'DevOps'   },
-  { name: 'CI/CD Pipelines',     icon: '🔄', level: 80, cat: 'DevOps'   },
-  { name: 'PostgreSQL / NoSQL',  icon: '🗄️', level: 86, cat: 'Database' },
-  { name: 'Redis / Caching',     icon: '💾', level: 78, cat: 'Database' },
-  { name: 'React / Next.js',     icon: '⚛️', level: 75, cat: 'Frontend' },
-  { name: 'Flutter',             icon: '💙', level: 70, cat: 'Mobile'   },
-  { name: 'Linux / Shell',       icon: '🐧', level: 82, cat: 'Tools'    },
-  { name: 'Git / GitHub',        icon: '🔀', level: 92, cat: 'Tools'    },
-]
-
-const CATS = ['All', 'Backend', 'DevOps', 'Database', 'Frontend', 'Mobile', 'Tools']
 
 const SkillCard = ({ skill, delay }) => {
   const [ref, inView] = useInView()
@@ -42,8 +26,24 @@ const SkillCard = ({ skill, delay }) => {
 
 const Skills = () => {
   const [cat, setCat] = useState('All')
+  const [skills, setSkills] = useState(DEFAULT_SKILLS)
   const [titleRef, titleInView] = useInView()
-  const filtered = cat === 'All' ? SKILLS : SKILLS.filter((s) => s.cat === cat)
+
+  useEffect(() => {
+    // Fetch dynamically from MongoDB API
+    fetch('/api/skills')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSkills(data)
+        }
+      })
+      .catch(err => {
+        console.log('Using local fallback for skills:', err)
+      })
+  }, [])
+
+  const filtered = cat === 'All' ? skills : skills.filter((s) => s.cat === cat)
 
   return (
     <section id="skills" className="section skills-section">
@@ -68,7 +68,7 @@ const Skills = () => {
         </div>
 
         <div className="skills-grid">
-          {filtered.map((s, i) => <SkillCard key={s.name} skill={s} delay={i * 55} />)}
+          {filtered.map((s, i) => <SkillCard key={s.name || i} skill={s} delay={i * 55} />)}
         </div>
       </div>
     </section>

@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import dns from 'dns'
 import Project from './models/Project.js'
 import Message from './models/Message.js'
+import Skill from './models/Skill.js'
 
 dns.setServers(['8.8.8.8', '8.8.4.4'])
 
@@ -32,7 +33,17 @@ app.get('/api/projects', async (req, res) => {
   }
 })
 
-// 2. Get single project by id
+// 2. Get all skills
+app.get('/api/skills', async (req, res) => {
+  try {
+    const skills = await Skill.find().sort({ order: 1, createdAt: 1 })
+    res.json(skills)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// 3. Get single project by id
 app.get('/api/projects/:id', async (req, res) => {
   try {
     const project = await Project.findOne({ id: req.params.id })
