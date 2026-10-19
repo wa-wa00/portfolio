@@ -2,8 +2,11 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
+import dns from 'dns'
 import Project from './models/Project.js'
 import Message from './models/Message.js'
+
+dns.setServers(['8.8.8.8', '8.8.4.4'])
 
 dotenv.config()
 
