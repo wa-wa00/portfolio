@@ -1,6 +1,6 @@
 export const SKILLS = [
-  { name: 'Python / FastAPI',    icon: '🐍', level: 90, cat: 'Backend',  order: 1 },
-  { name: 'Node.js / Express',   icon: '⚡', level: 85, cat: 'Backend',  order: 2 },
+  { name: 'Python / FastAPI',    icon: '🐍', level: 80, cat: 'Backend',  order: 1 },
+  { name: 'Node.js / Express',   icon: '⚡', level: 75, cat: 'Backend',  order: 2 },
   { name: 'REST & GraphQL',      icon: '🔗', level: 90, cat: 'Backend',  order: 3 },
   { name: 'Docker',              icon: '🐳', level: 88, cat: 'DevOps',   order: 4 },
   { name: 'Kubernetes',          icon: '☸️', level: 75, cat: 'DevOps',   order: 5 },

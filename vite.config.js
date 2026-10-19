@@ -16,4 +16,13 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    proxy: {
+      // เมื่อ React เรียก /api/... จะถูก redirect ไปหา Express server port 5000 อัตโนมัติ
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+    },
+  },
 })
