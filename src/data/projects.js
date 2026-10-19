@@ -2,6 +2,11 @@ export const PROJECTS = [
   {
     id: 'api-gateway',
     image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800',
+    gallery: [
+      'https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800'
+    ],
     icon: '🔗', 
     title: 'API Gateway Service',
     desc: 'High-performance API gateway with rate limiting, JWT auth, and request routing built with FastAPI and Redis.',
@@ -14,6 +19,10 @@ export const PROJECTS = [
   {
     id: 'task-management',
     image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
+    gallery: [
+      'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800'
+    ],
     icon: '✅', 
     title: 'Task Management System',
     desc: 'Full-stack task manager with real-time updates via WebSocket, built with Node.js, Express, and PostgreSQL.',
@@ -26,6 +35,11 @@ export const PROJECTS = [
   {
     id: 'k8s-microservices',
     image: 'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?auto=format&fit=crop&q=80&w=800',
+    gallery: [
+      'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800'
+    ],
     icon: '☸️', 
     title: 'K8s Microservices',
     desc: 'Kubernetes-based microservices deployment with Helm charts, HPA auto-scaling, and Prometheus monitoring.',
@@ -38,6 +52,11 @@ export const PROJECTS = [
   {
     id: 'finance-mobile',
     image: 'https://images.unsplash.com/photo-1616469829581-73993eb86b02?auto=format&fit=crop&q=80&w=800',
+    gallery: [
+      'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?auto=format&fit=crop&q=80&w=800'
+    ],
     icon: '💰', 
     title: 'Finance Mobile App',
     desc: 'Cross-platform personal finance tracker built with Flutter, featuring real-time sync and offline-first support.',
@@ -50,6 +69,10 @@ export const PROJECTS = [
   {
     id: 'auth-microservice',
     image: 'https://images.unsplash.com/photo-1555949963-aa79dcee57d5?auto=format&fit=crop&q=80&w=800',
+    gallery: [
+      'https://images.unsplash.com/photo-1555949963-aa79dcee57d5?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1510511459019-5d55ad34f381?auto=format&fit=crop&q=80&w=800'
+    ],
     icon: '🔒', 
     title: 'Auth Microservice',
     desc: 'Secure authentication service with JWT, OAuth2, 2FA, and RBAC permission management.',
@@ -62,6 +85,11 @@ export const PROJECTS = [
   {
     id: 'etl-pipeline',
     image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
+    gallery: [
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=800'
+    ],
     icon: '📊', 
     title: 'ETL Data Pipeline',
     desc: 'Async ETL pipeline for processing large datasets with Celery workers, monitoring, and failure recovery.',

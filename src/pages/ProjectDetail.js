@@ -81,6 +81,21 @@ const ProjectDetail = () => {
             </div>
           </div>
         </div>
+
+        {/* --- Gallery Section --- */}
+        {project.gallery && project.gallery.length > 0 && (
+          <div className={`pd-gallery-section fade-in ${mounted ? 'visible' : ''}`} style={{ transitionDelay: '400ms' }}>
+            <h2 className="pd-subtitle">Gallery</h2>
+            <div className="pd-gallery-grid">
+              {project.gallery.map((img, idx) => (
+                <div key={idx} className="pd-gallery-item glass-card">
+                  <img src={img} alt={`${project.title} screenshot ${idx + 1}`} className="pd-gallery-img" />
+                  <div className="pd-image-glow" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         
       </div>
     </div>
