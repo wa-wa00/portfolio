@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react'
 import './Hero.css'
 
-const ROLES = ['Backend Developer', 'API Architect', 'Cloud Engineer', 'Open Source Builder']
+const ROLES = [
+  'Embedded & IoT Engineer',
+  'Backend Developer',
+  'AI & Robotics Builder',
+  'Hardware-Software Integrator'
+]
 
 const Hero = () => {
   const [text, setText] = useState('')
@@ -68,8 +73,8 @@ const Hero = () => {
         </div>
 
         <p className="hero-desc">
-          Building scalable backend systems, robust APIs, and cloud-native infrastructure.
-          I turn complex problems into elegant, production-ready solutions.
+          Bridging the gap between software and the physical world. I design intelligent IoT systems,
+          embedded firmware (ESP32 / Raspberry Pi), computer vision AI, 3D prototyping, and robust backend APIs.
         </p>
 
         <div className="hero-actions">
