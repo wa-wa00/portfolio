@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useLocation, useNavigate, Link } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import './Navbar.css'
 
 const links = [
@@ -24,7 +24,6 @@ const Navbar = () => {
   const scrollTo = (id) => {
     setOpen(false)
     if (location.pathname !== '/') {
-      // Navigate to home first, then scroll
       navigate('/')
       setTimeout(() => {
         document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -47,45 +46,31 @@ const Navbar = () => {
       <div className="nav-inner container">
         {/* Logo */}
         <button className="nav-logo" onClick={handleLogoClick}>
-          <span className="logo-bracket">&lt;</span>
-          <span className="logo-name">Walid.dev</span>
-          <span className="logo-bracket">/&gt;</span>
+          <span className="bracket">&lt;</span>Walid<span className="bracket"> /&gt;</span>
         </button>
 
-        {/* Desktop links */}
-        <div className="nav-links">
-          {links.map((l) => (
-            <button key={l.id} className="nav-link" onClick={() => scrollTo(l.id)}>
-              {l.label}
+        {/* Links (desktop & mobile dropdown) */}
+        <div className={`nav-links ${open ? 'open' : ''}`}>
+          {links.map(({ label, id }) => (
+            <button key={id} className="nav-link" onClick={() => scrollTo(id)}>
+              {label}
             </button>
           ))}
-          <button className="btn-primary nav-cta" onClick={() => scrollTo('contact')}>
-            Let's Talk
-          </button>
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          className={`nav-toggle ${open ? 'open' : ''}`}
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-      </div>
-
-      {/* Mobile menu */}
-      <div className={`mobile-menu ${open ? 'open' : ''}`}>
-        {links.map((l) => (
-          <button key={l.id} className="mobile-link" onClick={() => scrollTo(l.id)}>
-            {l.label}
+        {/* CTA + hamburger */}
+        <div className="nav-right">
+          <button className="btn-primary hire-btn" onClick={() => scrollTo('contact')}>
+            Let's Talk
           </button>
-        ))}
-        <button className="btn-primary mobile-cta" onClick={() => scrollTo('contact')}>
-          Let's Talk
-        </button>
+          <button
+            className={`hamburger ${open ? 'open' : ''}`}
+            onClick={() => setOpen(!open)}
+            aria-label="Toggle menu"
+          >
+            <span /><span /><span />
+          </button>
+        </div>
       </div>
     </nav>
   )
