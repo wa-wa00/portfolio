@@ -10,13 +10,6 @@ const GH = () => (
   </svg>
 )
 
-const ExtLink = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="15" height="15">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
-    <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
-  </svg>
-)
-
 const ProjectCard = ({ p, delay }) => {
   const [ref, inView] = useInView()
   const navigate = useNavigate()
@@ -35,7 +28,7 @@ const ProjectCard = ({ p, delay }) => {
   }
 
   const handleCardClick = (e) => {
-    // Prevent navigating to detail page if user clicked on GitHub or Live links directly
+    // Prevent navigating to detail page if user clicked on GitHub link directly
     if (e.target.closest('.plink')) return
     navigate(`/project/${p.id}`)
   }
@@ -70,8 +63,9 @@ const ProjectCard = ({ p, delay }) => {
           {p.tags.map((t) => <span key={t} className="proj-tag">{t}</span>)}
         </div>
         <div className="proj-links">
-          <a href={p.github} target="_blank" rel="noopener noreferrer" className="plink"><GH /> GitHub</a>
-          <a href={p.live}   target="_blank" rel="noopener noreferrer" className="plink primary"><ExtLink /> Live</a>
+          {p.github && p.github !== '#' && (
+            <a href={p.github} target="_blank" rel="noopener noreferrer" className="plink"><GH /> GitHub</a>
+          )}
         </div>
       </div>
     </div>
