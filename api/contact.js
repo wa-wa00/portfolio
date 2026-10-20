@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
-import dns from 'dns'
 
-dns.setServers(['8.8.8.8', '8.8.4.4'])
+// ใช้ Direct URI เพื่อเชื่อมต่อ MongoDB Atlas Shards โดยตรง 100% ไม่หลุด DNS
+const DIRECT_MONGODB_URI = 'mongodb://Admin:walid7879@ac-p2cbioi-shard-00-00.7ykl3j8.mongodb.net:27017,ac-p2cbioi-shard-00-01.7ykl3j8.mongodb.net:27017,ac-p2cbioi-shard-00-02.7ykl3j8.mongodb.net:27017/portfolio?ssl=true&replicaSet=atlas-71y4ds-shard-0&authSource=admin&retryWrites=true&w=majority'
 
-let isConnected = false
+let cachedConn = null
 
 const messageSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -15,15 +15,14 @@ const messageSchema = new mongoose.Schema({
 const Message = mongoose.models.Message || mongoose.model('Message', messageSchema)
 
 async function connectDB() {
-  if (isConnected || !process.env.MONGODB_URI) return isConnected
-  try {
-    await mongoose.connect(process.env.MONGODB_URI)
-    isConnected = true
-    return true
-  } catch (err) {
-    console.error('MongoDB connection error:', err)
-    return false
+  if (cachedConn && mongoose.connection.readyState === 1) {
+    return cachedConn
   }
+
+  cachedConn = await mongoose.connect(DIRECT_MONGODB_URI, {
+    serverSelectionTimeoutMS: 8000,
+  })
+  return cachedConn
 }
 
 export default async function handler(req, res) {
@@ -45,18 +44,12 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Name, email, and message are required' })
   }
 
-  const connected = await connectDB()
-
-  if (connected) {
-    try {
-      const saved = await Message.create({ name, email, message })
-      return res.status(201).json({ success: true, message: 'Message saved to MongoDB!', data: saved })
-    } catch (err) {
-      console.error('Error saving message to MongoDB:', err)
-      return res.status(500).json({ success: false, error: err.message })
-    }
+  try {
+    await connectDB()
+    const saved = await Message.create({ name, email, message })
+    return res.status(201).json({ success: true, message: 'Message saved to MongoDB!', data: saved })
+  } catch (err) {
+    console.error('Error saving message to MongoDB:', err)
+    return res.status(500).json({ success: false, error: err.message })
   }
-
-  // If DB not connected, respond with mock success so user form still feels responsive
-  return res.status(200).json({ success: true, message: 'Message received (DB offline mock)' })
 }
