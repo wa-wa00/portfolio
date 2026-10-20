@@ -7,6 +7,10 @@ const Hero = () => {
   const [text, setText] = useState('')
   const [roleIdx, setRoleIdx] = useState(0)
   const [deleting, setDeleting] = useState(false)
+  const [stats, setStats] = useState({
+    projectsCount: 0,
+    skillsCount: 0
+  })
 
   useEffect(() => {
     const role = ROLES[roleIdx]
@@ -26,6 +30,19 @@ const Hero = () => {
     return () => clearTimeout(timer)
   }, [text, deleting, roleIdx])
 
+  // ดึงจำนวนจริงจาก Database (Projects & Skills)
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/projects').then(r => r.json()).catch(() => []),
+      fetch('/api/skills').then(r => r.json()).catch(() => [])
+    ]).then(([projects, skills]) => {
+      setStats({
+        projectsCount: Array.isArray(projects) ? projects.length : 0,
+        skillsCount: Array.isArray(skills) ? skills.length : 0
+      })
+    })
+  }, [])
+
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
 
   return (
@@ -34,12 +51,6 @@ const Hero = () => {
       <div className="orb orb-1" />
       <div className="orb orb-2" />
       <div className="orb orb-3" />
-
-      {/* Floating tech cards */}
-      {/* <div className="fcard fcard-1 glass-card"><span>🐍</span><small>FastAPI</small></div>
-      <div className="fcard fcard-2 glass-card"><span>🐳</span><small>Docker</small></div>
-      <div className="fcard fcard-3 glass-card"><span>☸️</span><small>K8s</small></div>
-      <div className="fcard fcard-4 glass-card"><span>⚡</span><small>Node.js</small></div> */}
 
       <div className="hero-content container">
         <div className="hero-badge">
@@ -80,12 +91,16 @@ const Hero = () => {
           </div>
           <div className="stat-div" />
           <div className="stat">
-            <span className="stat-n gradient-text">20+</span>
+            <span className="stat-n gradient-text">
+              {stats.projectsCount > 0 ? `${stats.projectsCount}+` : '0'}
+            </span>
             <span className="stat-l">Projects</span>
           </div>
           <div className="stat-div" />
           <div className="stat">
-            <span className="stat-n gradient-text">10+</span>
+            <span className="stat-n gradient-text">
+              {stats.skillsCount > 0 ? `${stats.skillsCount}+` : '0'}
+            </span>
             <span className="stat-l">Technologies</span>
           </div>
         </div>
