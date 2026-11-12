@@ -1,79 +1,45 @@
 import { useState, useEffect } from 'react'
-import { SKILLS as DEFAULT_SKILLS, CATS as DEFAULT_CATS } from '../../data/skills'
+import { SKILLS as DEFAULT_SKILLS } from '../../data/skills'
 import useInView from '../../hooks/useInView'
 import './Skills.css'
 
-const SkillCard = ({ skill, delay }) => {
-  const [ref, inView] = useInView()
-  return (
-    <div
-      ref={ref}
-      className={`sk-card glass-card fade-in ${inView ? 'visible' : ''}`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      <span className="sk-icon">{skill.icon}</span>
-      <div className="sk-info">
-        <p className="sk-name">{skill.name}</p>
-        <div className="sk-bar">
-          <div className="sk-fill" style={{ width: inView ? `${skill.level}%` : '0%' }} />
-        </div>
-        <span className="sk-pct">{skill.level}%</span>
-      </div>
-      <span className="sk-badge">{skill.cat}</span>
-    </div>
-  )
-}
-
 const Skills = () => {
-  const [cat, setCat] = useState('All')
   const [skills, setSkills] = useState(DEFAULT_SKILLS)
-  const [titleRef, titleInView] = useInView()
+  const [ref, inView] = useInView()
 
   useEffect(() => {
     // ดึงข้อมูลสดจาก MongoDB Database
     fetch('/api/skills')
       .then(res => res.json())
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          setSkills(data)
-        }
+        if (Array.isArray(data) && data.length > 0) setSkills(data)
       })
-      .catch(err => {
-        console.error('Skills fetch error:', err)
-      })
+      .catch(err => console.error('Skills fetch error:', err))
   }, [])
 
-  // สกัดรายชื่อหมวดหมู่จากข้อมูลใน Database โดยอัตโนมัติ
-  const dbCategories = ['All', ...new Set(skills.map(s => s.cat).filter(Boolean))]
-  const categories = dbCategories.length > 1 ? dbCategories : DEFAULT_CATS
-
-  const filtered = cat === 'All' ? skills : skills.filter((s) => s.cat === cat)
+  // จัดกลุ่มตามหมวดหมู่ (คงลำดับตามที่ปรากฏในข้อมูล)
+  const groups = skills.reduce((acc, s) => {
+    const cat = s.cat || 'Other'
+    ;(acc[cat] ||= []).push(s.name)
+    return acc
+  }, {})
 
   return (
-    <section id="skills" className="section skills-section">
-      <div className="skills-bg-orb" />
-      <div className="container">
-        <div ref={titleRef} className={`section-header fade-in ${titleInView ? 'visible' : ''}`}>
-          <div className="section-label">Expertise</div>
-          <h2 className="section-title">
-            My <span className="gradient-text">Technical Skills</span>
-          </h2>
-          <p className="section-desc">
-            Tools and technologies I use to build scalable, production-ready systems.
-          </p>
+    <section id="skills" className="section">
+      <div ref={ref} className={`container fade-in ${inView ? 'visible' : ''}`}>
+        <div className="section-head">
+          <p className="section-label">02 / Skills</p>
+          <h2 className="section-title">Tools and technologies I work with.</h2>
         </div>
 
-        <div className="cat-pills">
-          {categories.map((c) => (
-            <button key={c} className={`cat-pill ${cat === c ? 'active' : ''}`} onClick={() => setCat(c)}>
-              {c}
-            </button>
+        <dl className="section-body skill-groups">
+          {Object.entries(groups).map(([cat, names]) => (
+            <div key={cat} className="skill-row">
+              <dt>{cat}</dt>
+              <dd>{names.join(', ')}</dd>
+            </div>
           ))}
-        </div>
-
-        <div className="skills-grid">
-          {filtered.map((s, i) => <SkillCard key={s._id || s.name || i} skill={s} delay={i * 55} />)}
-        </div>
+        </dl>
       </div>
     </section>
   )

@@ -12,14 +12,33 @@ const links = [
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const [active, setActive] = useState('')
+  const [progress, setProgress] = useState(0)
   const location = useLocation()
   const navigate = useNavigate()
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50)
-    window.addEventListener('scroll', onScroll)
+    const onScroll = () => {
+      setScrolled(window.scrollY > 50)
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      setProgress(max > 0 ? window.scrollY / max : 0)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [location.pathname])
+
+  // Highlight the section currently in view
+  useEffect(() => {
+    if (location.pathname !== '/') { setActive(''); return }
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id) }),
+      { rootMargin: '-45% 0px -50% 0px' }
+    )
+    const ids = ['hero', ...links.map((l) => l.id)]
+    ids.forEach((id) => { const el = document.getElementById(id); if (el) observer.observe(el) })
+    return () => observer.disconnect()
+  }, [location.pathname])
 
   const scrollTo = (id) => {
     setOpen(false)
@@ -46,32 +65,27 @@ const Navbar = () => {
       <div className="nav-inner container">
         {/* Logo */}
         <button className="nav-logo" onClick={handleLogoClick}>
-          <span className="bracket">&lt;</span>Walid<span className="bracket"> /&gt;</span>
+          Walid Akaraniti
         </button>
 
         {/* Links (desktop & mobile dropdown) */}
         <div className={`nav-links ${open ? 'open' : ''}`}>
           {links.map(({ label, id }) => (
-            <button key={id} className="nav-link" onClick={() => scrollTo(id)}>
+            <button key={id} className={`nav-link ${active === id ? 'active' : ''}`} onClick={() => scrollTo(id)}>
               {label}
             </button>
           ))}
         </div>
 
-        {/* CTA + hamburger */}
-        <div className="nav-right">
-          <button className="btn-primary hire-btn" onClick={() => scrollTo('contact')}>
-            Let's Talk
-          </button>
-          <button
-            className={`hamburger ${open ? 'open' : ''}`}
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
-          >
-            <span /><span /><span />
-          </button>
-        </div>
+        <button
+          className={`hamburger ${open ? 'open' : ''}`}
+          onClick={() => setOpen(!open)}
+          aria-label="Toggle menu"
+        >
+          <span /><span />
+        </button>
       </div>
+      <div className="nav-progress" style={{ transform: `scaleX(${progress})` }} />
     </nav>
   )
 }
